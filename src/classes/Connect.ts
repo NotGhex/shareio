@@ -17,7 +17,7 @@ export class Connect {
     constructor(options: ConnectOptions) {
         console.log(`Connecting to ${chalk.green(options.server)}`);
 
-        this.socket = io(options.server);
+        this.socket = io(options.server, { transports: ['websocket'] });
         this.options = options;
     }
 

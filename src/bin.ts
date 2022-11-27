@@ -20,7 +20,8 @@ command.command('host')
 
         const host = new Host({
             sharedFilesFolder: folder,
-            password: options.password
+            password: options.password,
+            transports: ['websocket']
         });
 
         await host.start(port ?? 5523);
