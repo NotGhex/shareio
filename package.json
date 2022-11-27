@@ -2,6 +2,10 @@
   "name": "share.io",
   "version": "1.0.0",
   "description": "A simple file sharing package built with socket.io",
+  "repository": {
+    "url": "https://github.com/NotGhex/shareio.git",
+    "type": "git"
+  },
   "bin": {
     "shareio": "./bin/bin.js"
   },
