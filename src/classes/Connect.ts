@@ -44,8 +44,8 @@ export class Connect {
                 res(void 0);
             });
 
-            this.socket.on('disconnect', (reason, description) => {
-                console.log(`Disconnected: ${chalk.magenta(this.socket.id)}`);
+            this.socket.on('disconnect', reason => {
+                console.log(`Disconnected: ${reason}`);
                 res(void 0);
             });
 

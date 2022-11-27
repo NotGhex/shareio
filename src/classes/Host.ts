@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import { StreamFileChunkData, StreamFileDoneData, StreamFileErrorData, StreamFileReadyData } from '../types/stream';
 import { createWriteStream, existsSync, mkdirSync, rmSync, WriteStream } from 'fs';
 import path from 'path';
+import { setTimeout as setTimeoutAsync } from 'timers/promises';
 
 export interface HostOptions extends Partial<ServerOptions> {
     sharedFilesFolder: string;
@@ -103,10 +104,10 @@ export class Host {
             this.files.splice(index);
         });
 
-        socket.on('disconnect', reson => {
-            console.log(`Disconnected ${chalk.magenta(socket.id)}: ${reson}`);
+        socket.on('disconnect', async reason => {
+            console.log(`Disconnected ${chalk.magenta(socket.id)}: ${reason}`);
 
-            const abortedFileTransfers = this.files.filter(f => f.socketId === socket.id);
+            const abortedFileTransfers = await setTimeoutAsync(1000, this.files.filter(f => f.socketId === socket.id));
 
             for (const file of abortedFileTransfers) {
                 console.log(`Aborted ${chalk.cyan(file.fileName)}`);
