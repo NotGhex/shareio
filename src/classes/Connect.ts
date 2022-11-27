@@ -89,8 +89,6 @@ export class Connect {
                 });
             });
 
-            file.on('close', () => res(void 0));
-
             file.on('end', () => {
                 this.socket.emit('fileDone', <StreamFileDoneData>({
                     type: 'done',
@@ -98,7 +96,11 @@ export class Connect {
                     fileName: pathInfo.base
                 }));
 
-                console.log(`File sent ${chalk.cyan(filePath)}`);
+                this.socket.once('fileReceived', id => {
+                    if (id !== fileId) return;
+                    console.log(`File sent ${chalk.cyan(filePath)}`);
+                    res(void 0);
+                });
             });
 
             file.on('error', err => {

@@ -102,21 +102,23 @@ export class Host {
 
             const index = this.files.findIndex(f => f.id === data.id);
             this.files.splice(index);
+
+            socket.emit('fileReceived', data.id);
         });
 
         socket.on('disconnect', async reason => {
             console.log(`Disconnected ${chalk.magenta(socket.id)}: ${reason}`);
 
-            const abortedFileTransfers = await setTimeoutAsync(1000, this.files.filter(f => f.socketId === socket.id));
+            // const abortedFileTransfers = await setTimeoutAsync(1000, this.files.filter(f => f.socketId === socket.id));
 
-            for (const file of abortedFileTransfers) {
-                console.log(`Aborted ${chalk.cyan(file.fileName)}`);
+            // for (const file of abortedFileTransfers) {
+            //     console.log(`Aborted ${chalk.cyan(file.fileName)}`);
 
-                file.writeStream.close();
-                rmSync(path.join(this.options.sharedFilesFolder, file.fileName), { force: true, recursive: true });
-            }
+            //     file.writeStream.close();
+            //     rmSync(path.join(this.options.sharedFilesFolder, file.fileName), { force: true, recursive: true });
+            // }
 
-            this.files = this.files.filter(f => f.socketId !== socket.id);
+            // this.files = this.files.filter(f => f.socketId !== socket.id);
         });
     }
 }
