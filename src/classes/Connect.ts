@@ -7,6 +7,7 @@ import { randomUUID } from 'crypto';
 
 export interface ConnectOptions {
     server: string;
+    password?: string;
 }
 
 export class Connect {
@@ -36,6 +37,21 @@ export class Connect {
                 console.log(`Connection error: `, err.stack);
                 this.socket.close();
                 rej(err);
+            });
+
+            this.socket.on('needPassword', () => {
+                if (this.options.password == undefined) {
+                    console.log(`Password needed to connect`);
+                    this.socket.close();
+                    rej(void 0);
+                }
+
+                this.socket.emit('password', this.options.password);
+                this.socket.once('invalidPassword', () => {
+                    console.log(`Invalid password given`);
+                    this.socket.close();
+                    rej(void 0);
+                });
             });
         });
     }

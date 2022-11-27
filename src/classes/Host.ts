@@ -6,12 +6,13 @@ import path from 'path';
 
 export interface HostOptions extends Partial<ServerOptions> {
     sharedFilesFolder: string;
+    password?: string;
 }
 
 export class Host {
     public socket: Server;
     public options: HostOptions;
-    public files: (Omit<StreamFileChunkData, 'data'> & { writeStream: WriteStream; })[] = [];
+    public files: (Omit<StreamFileChunkData, 'data'> & { writeStream: WriteStream; socketId: string; })[] = [];
 
     constructor (options: HostOptions) {
         this.socket = new Server(options);
@@ -22,7 +23,22 @@ export class Host {
     }
 
     public async start(port: number): Promise<void> {
-        this.socket.on('connection', socket => {
+        this.socket.on('connection', async socket => {
+            if (this.options.password) socket.emit('needPassword');
+
+            const allowConnection = await new Promise((res) => {
+                if (this.options.password == undefined) return res(true);
+                setTimeout(() => res(true), 5000);
+
+                socket.once('password', password => {
+                    if (password === this.options.password) res(true);
+                    socket.emit('invalidPassword', password);
+                    res(false);
+                });
+            });
+
+            if (!allowConnection) return socket.disconnect(true);
+
             console.log(`${chalk.magenta(socket.id)} connected!`);
             this.listenToSocket(socket);
         });
@@ -50,7 +66,8 @@ export class Host {
                 ...data,
                 type: 'chunk',
                 fileName,
-                writeStream
+                writeStream,
+                socketId: socket.id
             });
         });
 
@@ -84,6 +101,21 @@ export class Host {
 
             const index = this.files.findIndex(f => f.id === data.id);
             this.files.splice(index);
+        });
+
+        socket.on('disconnect', reson => {
+            console.log(`Disconnected ${chalk.magenta(socket.id)}: ${reson}`);
+
+            const abortedFileTransfers = this.files.filter(f => f.socketId === socket.id);
+
+            for (const file of abortedFileTransfers) {
+                console.log(`Aborted ${chalk.cyan(file.fileName)}`);
+
+                file.writeStream.close();
+                rmSync(path.join(this.options.sharedFilesFolder, file.fileName), { force: true, recursive: true });
+            }
+
+            this.files = this.files.filter(f => f.socketId !== socket.id);
         });
     }
 }

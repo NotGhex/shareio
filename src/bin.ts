@@ -12,7 +12,8 @@ const command = new Command()
 command.command('host')
     .alias('receive')
     .option('-p, --port [port]', 'Set host port')
-    .option('-F, --folder [share files folder]', 'Shared files will appear here')
+    .option('-F, --folder [folder]', 'Shared files will appear here')
+    .option('-P, --password [password]', 'Add connection password')
     .action(async options => {
         const port = !isNaN(Number(options.port)) ? Number(options.port) : undefined;
         const folder = options.folder ?? process.cwd();
@@ -26,6 +27,7 @@ command.command('connect')
     .alias('send')
     .option('-h, --host [host]', 'Receiver\'s server', 'http://127.0.0.1:5523/')
     .option('-f, --file <share file>', 'File to share')
+    .option('-P, --password [password]', 'Host password')
     .action(async options => {
         const host = options.host;
         const file = options.file;
