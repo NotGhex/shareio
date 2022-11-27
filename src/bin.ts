@@ -18,7 +18,10 @@ command.command('host')
         const port = !isNaN(Number(options.port)) ? Number(options.port) : undefined;
         const folder = options.folder ?? process.cwd();
 
-        const host = new Host({ sharedFilesFolder: folder });
+        const host = new Host({
+            sharedFilesFolder: folder,
+            password: options.password
+        });
 
         await host.start(port ?? 5523);
     })
@@ -35,7 +38,8 @@ command.command('connect')
         if (!existsSync(file)) throw new Error(`File '${file}' doesn't exists`);
 
         const connect = new Connect({
-            server: host
+            server: host,
+            password: options.password
         });
 
         await connect.handleConnection();

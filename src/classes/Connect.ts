@@ -25,6 +25,22 @@ export class Connect {
         await new Promise((res, rej) => {
             this.socket.on('connect', () => {
                 console.log(`Connected: ${chalk.magenta('Id: ' + this.socket.id)}`);
+
+                this.socket.once('needPassword', () => {
+                    if (this.options.password == undefined) {
+                        console.log(`Password needed to connect`);
+                        this.socket.close();
+                        rej(void 0);
+                    }
+
+                    this.socket.emit('password', this.options.password);
+                    this.socket.once('invalidPassword', () => {
+                        console.log(`Invalid password given`);
+                        this.socket.close();
+                        rej(void 0);
+                    });
+                });
+
                 res(void 0);
             });
 
@@ -37,21 +53,6 @@ export class Connect {
                 console.log(`Connection error: `, err.stack);
                 this.socket.close();
                 rej(err);
-            });
-
-            this.socket.on('needPassword', () => {
-                if (this.options.password == undefined) {
-                    console.log(`Password needed to connect`);
-                    this.socket.close();
-                    rej(void 0);
-                }
-
-                this.socket.emit('password', this.options.password);
-                this.socket.once('invalidPassword', () => {
-                    console.log(`Invalid password given`);
-                    this.socket.close();
-                    rej(void 0);
-                });
             });
         });
     }
