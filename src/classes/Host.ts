@@ -51,24 +51,22 @@ export class Host {
     public listenToSocket(socket: Socket): void {
         socket.on('fileReady', (data: StreamFileReadyData) => {
             let fileName = data.fileName;
-            let writeStream: WriteStream;
 
+            if (!existsSync(this.options.sharedFilesFolder)) mkdirSync(this.options.sharedFilesFolder, { recursive: true });
             if (existsSync(path.join(this.options.sharedFilesFolder, fileName))) {
                 const pathInfo = path.parse(fileName);
                 fileName = pathInfo.name + ' (1)' + pathInfo.ext;
             }
 
+            socket.emit('fileReadyReceived', data.id);
             console.log(`Receiving: ${chalk.cyan('File: ' + fileName)} | ${chalk.green('Id: ' + data.id)}`);
-            this.socket.sockets.emit('fileReadyReceived', data.id);
-
-            writeStream = createWriteStream(path.join(this.options.sharedFilesFolder, fileName));
 
             this.files.push({
                 ...data,
                 type: 'chunk',
                 fileName,
-                writeStream,
-                socketId: socket.id
+                socketId: socket.id,
+                writeStream: createWriteStream(path.join(this.options.sharedFilesFolder, fileName)),
             });
         });
 
@@ -90,7 +88,7 @@ export class Host {
             rmSync(path.join(this.options.sharedFilesFolder, file.fileName), { force: true, recursive: true });
 
             const index = this.files.findIndex(f => f.id === data.id);
-            this.files.splice(index);
+            this.files.splice(index, 1);
         });
 
         socket.on('fileDone', (data: StreamFileDoneData) => {
@@ -101,7 +99,7 @@ export class Host {
             file.writeStream.close();
 
             const index = this.files.findIndex(f => f.id === data.id);
-            this.files.splice(index);
+            this.files.splice(index, 1);
 
             socket.emit('fileReceived', data.id);
         });
@@ -120,5 +118,7 @@ export class Host {
 
             this.files = this.files.filter(f => f.socketId !== socket.id);
         });
+
+        socket.on('allDone', () => socket.disconnect(true));
     }
 }
