@@ -1,7 +1,7 @@
 {
     "name": "@shareio/cli",
     "description": "CLI for share.io",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "type": "module",
     "bin": {
         "shareio": "./bin/index.mjs"
@@ -12,6 +12,6 @@
     "dependencies": {
         "chalk": "^5.2.0",
         "commander": "^9.4.1",
-        "share.io": "*"
+        "share.io": "^2.0.0"
     }
 }
