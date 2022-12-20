@@ -1,6 +1,6 @@
 {
     "name": "share.io",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "license": "GPL-3.0",
     "description": "A simple file sharing made with socket.io",
     "type": "commonjs",
