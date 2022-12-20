@@ -2,7 +2,8 @@
     "compilerOptions": {
         "target": "ESNext",
         "module": "NodeNext",
-        "moduleResolution": "Node",
+        "moduleResolution": "NodeNext",
+        "composite": true,
         "newLine": "lf",
         "allowJs": true,
         "esModuleInterop": true,
@@ -10,6 +11,6 @@
         "allowSyntheticDefaultImports": true,
         "strict": true,
         "sourceMap": true,
-        "skipDefaultLibCheck": true
+        "skipLibCheck": true
     }
 }

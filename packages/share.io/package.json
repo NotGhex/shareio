@@ -19,7 +19,7 @@
         }
     },
     "scripts": {
-        "build": "npx rimraf disst && npx tsc"
+        "clean": "npx rimraf dist"
     },
     "dependencies": {
         "@discordjs/collection": "^1.3.0",

@@ -19,7 +19,8 @@ export interface ReceiverClientOptions {
 
 export interface ReceiverClientEvents {
     ready: (client: ReceiverClient, port: number) => Awaitable<void>;
-    connected: (socket: Socket<SenderSocketEvents>, client: ReceiverClient) => Awaitable<void>;
+    connected: (socket: Socket<SenderSocketEvents, ReceiverClientSocketEvents>, client: ReceiverClient) => Awaitable<void>;
+    disconnected: (socket: Socket<SenderSocketEvents, ReceiverClientSocketEvents>) => Awaitable<void>;
     newFile: (data: ReceivedFileData) => Awaitable<void>;
     fileStream: (data: AnyStreamData) => Awaitable<void>;
     receivedFile: (data: ReceivedFileData) => Awaitable<void>;
@@ -126,6 +127,8 @@ export class ReceiverClient extends TypedEmitter<ReceiverClientEvents> {
             await Promise.all(this.files
                 .filter(file => file.socket.id === socket.id)
                 .map(async fileData => this.abort(fileData.id, true)));
+
+            this.emit('disconnected', socket);
         });
     }
 

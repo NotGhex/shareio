@@ -1,17 +1,19 @@
 {
-  "name": "share.io",
+  "name": "@shareio/monorepo",
   "private": true,
   "description": "A simple file sharing made with socket.io",
   "scripts": {
-    "build": "npx lerna build"
+    "build": "npx lerna run clean && npm i && npx tsc --build"
   },
   "devDependencies": {
     "lerna": "^6.1.0",
     "rimraf": "^3.0.2",
+    "share.io": "*",
     "typescript": "^4.9.4"
   },
   "workspaces": [
     "packages/*",
     "applications/*"
-  ]
+  ],
+  "packageManager": "yarn@3.3.0"
 }

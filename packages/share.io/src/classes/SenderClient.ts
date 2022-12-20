@@ -1,13 +1,13 @@
-import { Collection } from '@discordjs/collection';
-import { randomUUID } from 'crypto';
-import { Awaitable } from 'fallout-utility';
-import { createReadStream, existsSync, lstatSync } from 'fs';
-import path from 'path';
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
+import { ReceiverClientSocketEvents } from './ReceiverClient';
+import { createReadStream, existsSync, lstatSync } from 'fs';
+import { AnyStreamData, StreamType } from '../types/stream';
+import { Collection } from '@discordjs/collection';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { SentFileData } from '../types/files';
-import { AbortStreamData, AnyStreamData, ReadyStreamData, StreamType } from '../types/stream';
-import { ReceiverClientSocketEvents } from './ReceiverClient';
+import { Awaitable } from 'fallout-utility';
+import { randomUUID } from 'crypto';
+import path from 'path';
 
 export interface SenderClientOptions {
     socketOptions?: Partial<ManagerOptions & SocketOptions>;
@@ -17,6 +17,7 @@ export interface SenderClientOptions {
 
 export interface SenderClientEvents {
     ready: (client: SenderClient) => Awaitable<void>;
+    error: (error: Error) => Awaitable<void>;
     fileStreamCreate: (fileData: SentFileData) => Awaitable<void>;
     fileStreamChunk: (fileData: SentFileData, chunk: Buffer) => Awaitable<void>;
     fileStreamError: (fileData: SentFileData, reason: Error) => Awaitable<void>;
@@ -42,12 +43,12 @@ export class SenderClient extends TypedEmitter<SenderClientEvents> {
 
         this.socket.on('connect', async () => {
             this.socket.once('passwordRequired', async () => {
-                if (!this.options.password) throw new Error(`Password is required`);
+                if (!this.options.password) return this._handleError(new Error(`Password is required`));
 
                 this.socket.emit('passwordAuth', this.options.password);
 
-                this.socket.once('passwordInvalid', () => { throw new Error(`Password is invalid`); });
-                this.socket.once('authenticationTimeout', () => { throw new Error(`Authentication timeout`); });
+                this.socket.once('passwordInvalid', () => { this._handleError(new Error(`Password is invalid`)); });
+                this.socket.once('authenticationTimeout', () => { this._handleError(new Error(`Authentication timeout`)); });
             });
 
             this.socket.once('ready', () => {
@@ -63,14 +64,14 @@ export class SenderClient extends TypedEmitter<SenderClientEvents> {
     }
 
     public async sendFile(filePath: string): Promise<SentFileData> {
-        if (!existsSync(filePath)) throw new Error(`File doesn't exists: ${filePath}`);
-        if (!this.socket.connected) throw new Error(`Not connected to host`);
+        if (!existsSync(filePath)) this._handleError(new Error(`File doesn't exists: ${filePath}`));
+        if (!this.socket.connected) this._handleError(new Error(`Not connected to host`));
 
         const fileInfo = lstatSync(filePath);
         const pathInfo = path.parse(filePath);
         const fileId = randomUUID();
 
-        if (!fileInfo.isFile()) throw new Error(`Invalid file: ${filePath}`);
+        if (!fileInfo.isFile()) this._handleError(new Error(`Invalid file: ${filePath}`));
 
         this.socket.emit('fileStream', {
             type: StreamType.READY,
@@ -171,5 +172,14 @@ export class SenderClient extends TypedEmitter<SenderClientEvents> {
 
             this.emit('fileStreamChunk', fileData, chunk);
         });
+    }
+
+    private _handleError(error: Error): void {
+        if (!this.listenerCount('error')) {
+            process.emitWarning('No error event listeners added client', 'ErrorEvent');
+            throw error;
+        }
+
+        throw error;
     }
 }

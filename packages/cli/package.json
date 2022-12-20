@@ -2,8 +2,12 @@
     "name": "@shareio/cli",
     "description": "CLI for share.io",
     "version": "1.0.0",
+    "type": "module",
+    "bin": {
+        "shareio": "./bin/index.js"
+    },
     "scripts": {
-        "build": "npx rimraf disst && npx tsc"
+        "clean": "npx rimraf bin"
     },
     "dependencies": {
         "commander": "^9.4.1",
