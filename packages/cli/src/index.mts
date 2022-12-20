@@ -63,3 +63,5 @@ command.command('send')
             senderClient.sendFile(file);
         }
     });
+
+command.parse();

@@ -3,12 +3,12 @@
   "private": true,
   "description": "A simple file sharing made with socket.io",
   "scripts": {
-    "build": "npx lerna run clean && npm i && npx lerna exec npx tsc"
+    "build": "npx lerna run clean && npx lerna exec npx tsc && npm i"
   },
   "devDependencies": {
+    "@shareio/cli": "*",
     "lerna": "^6.1.0",
     "rimraf": "^3.0.2",
-    "share.io": "*",
     "typescript": "^4.9.4"
   },
   "workspaces": [

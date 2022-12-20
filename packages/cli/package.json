@@ -4,12 +4,13 @@
     "version": "1.0.0",
     "type": "module",
     "bin": {
-        "shareio": "./bin/index.js"
+        "shareio": "./bin/index.mjs"
     },
     "scripts": {
         "clean": "npx rimraf bin"
     },
     "dependencies": {
+        "chalk": "^5.2.0",
         "commander": "^9.4.1",
         "share.io": "*"
     }
