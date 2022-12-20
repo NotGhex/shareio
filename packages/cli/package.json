@@ -1,0 +1,7 @@
+{
+    "name": "@shareio/cli",
+    "description": "CLI for share.io",
+    "scripts": {
+        "build": "npx rimraf disst && npx tsc"
+    }
+}

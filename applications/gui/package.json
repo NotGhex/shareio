@@ -1,0 +1,11 @@
+{
+    "name": "@shareio/gui",
+    "private": true,
+    "description": "Graphical Interface for share.io",
+    "scripts": {
+        "build": "npx rimraf disst && npx tsc"
+    },
+    "dependencies": {
+        "electron": "^22.0.0"
+    }
+}

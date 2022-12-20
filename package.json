@@ -1,49 +1,17 @@
 {
   "name": "share.io",
-  "version": "1.2.0",
-  "description": "A simple file sharing package built with socket.io",
-  "repository": {
-    "url": "https://github.com/NotGhex/shareio.git",
-    "type": "git"
-  },
-  "bin": {
-    "shareio": "./bin/bin.js"
-  },
-  "main": "./bin/index.js",
-  "module": "./bin/esm.mjs",
-  "types": "./bin/index.d.ts",
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./bin/index.d.ts",
-        "default": "./bin/esm.mjs"
-      },
-      "require": {
-        "types": "./bin/index.d.ts",
-        "default": "./bin/index.js"
-      }
-    }
-  },
+  "private": true,
+  "description": "A simple file sharing made with socket.io",
   "scripts": {
-    "clean": "npx rimraf ./bin",
-    "build": "npm run clean && npx tsc"
-  },
-  "files": [
-    "bin",
-    "LICENSE"
-  ],
-  "dependencies": {
-    "chalk": "^4.1.2",
-    "commander": "^9.4.1",
-    "detect-file-encoding-and-language": "^2.3.1",
-    "socket.io": "^4.5.4",
-    "socket.io-client": "^4.5.4"
+    "build": "npx lerna build"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
+    "lerna": "^6.1.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.9.3",
-    "share.io": "./"
+    "typescript": "^4.9.4"
   },
-  "packageManager": "yarn@3.3.0"
+  "workspaces": [
+    "packages/*",
+    "applications/*"
+  ]
 }
