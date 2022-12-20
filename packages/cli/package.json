@@ -1,7 +1,12 @@
 {
     "name": "@shareio/cli",
     "description": "CLI for share.io",
+    "version": "1.0.0",
     "scripts": {
         "build": "npx rimraf disst && npx tsc"
+    },
+    "dependencies": {
+        "commander": "^9.4.1",
+        "share.io": "*"
     }
 }
