@@ -20,10 +20,11 @@ export interface ReceiverClientOptions {
 export interface ReceiverClientEvents {
     ready: (client: ReceiverClient, port: number) => Awaitable<void>;
     connected: (socket: Socket<SenderSocketEvents, ReceiverClientSocketEvents>, client: ReceiverClient) => Awaitable<void>;
-    disconnected: (socket: Socket<SenderSocketEvents, ReceiverClientSocketEvents>) => Awaitable<void>;
+    disconnected: (reason: string, socket: Socket<SenderSocketEvents, ReceiverClientSocketEvents>) => Awaitable<void>;
     newFile: (data: ReceivedFileData) => Awaitable<void>;
     fileStream: (data: AnyStreamData) => Awaitable<void>;
     receivedFile: (data: ReceivedFileData) => Awaitable<void>;
+    abortTransfer: (data: ReceivedFileData) => Awaitable<void>;
 }
 
 export interface ReceiverClientSocketEvents {
@@ -68,6 +69,7 @@ export class ReceiverClient extends TypedEmitter<ReceiverClientEvents> {
         });
 
         this.files.delete(fileData.id);
+        this.emit('abortTransfer', fileData);
 
         return fileData;
     }
@@ -122,13 +124,13 @@ export class ReceiverClient extends TypedEmitter<ReceiverClientEvents> {
             }
         });
 
-        socket.on('disconnect', async () => {
+        socket.on('disconnect', async reason => {
             await setTimeoutAsync(1000);
             await Promise.all(this.files
                 .filter(file => file.socket.id === socket.id)
                 .map(async fileData => this.abort(fileData.id, true)));
 
-            this.emit('disconnected', socket);
+            this.emit('disconnected', reason, socket);
         });
     }
 

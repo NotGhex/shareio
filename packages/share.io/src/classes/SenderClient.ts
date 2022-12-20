@@ -17,10 +17,12 @@ export interface SenderClientOptions {
 
 export interface SenderClientEvents {
     ready: (client: SenderClient) => Awaitable<void>;
+    disconnect: (reason: string) => Awaitable<void>;
     error: (error: Error) => Awaitable<void>;
     fileStreamCreate: (fileData: SentFileData) => Awaitable<void>;
     fileStreamChunk: (fileData: SentFileData, chunk: Buffer) => Awaitable<void>;
     fileStreamError: (fileData: SentFileData, reason: Error) => Awaitable<void>;
+    fileStreamAbort: (fileData: SentFileData) => Awaitable<void>;
     fileStreamDone: (fileData: SentFileData) => Awaitable<void>;
     sentFile: (fileData: SentFileData) => Awaitable<void>;
 }
@@ -61,6 +63,8 @@ export class SenderClient extends TypedEmitter<SenderClientEvents> {
             this.socket.close();
             throw err;
         });
+
+        this.socket.on('disconnect', reason => this.emit('disconnect', reason));
     }
 
     public async sendFile(filePath: string): Promise<SentFileData> {
@@ -103,6 +107,7 @@ export class SenderClient extends TypedEmitter<SenderClientEvents> {
         });
 
         this.files.delete(fileData.id);
+        this.emit('fileStreamAbort', fileData);
     }
 
     private _handleSocketMessages(): void {
