@@ -1,11 +1,16 @@
 {
     "name": "@shareio/cli",
+    "license": "GPL-3.0",
     "description": "CLI for share.io",
     "version": "2.0.0",
     "type": "module",
     "bin": {
         "shareio": "./bin/index.mjs"
     },
+    "files": [
+        "bin",
+        "README.md"
+    ],
     "scripts": {
         "clean": "npx rimraf bin"
     },
@@ -13,5 +18,9 @@
         "chalk": "^5.2.0",
         "commander": "^9.4.1",
         "share.io": "^2.0.0"
-    }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "gitHead": "2c067370d0aa2b2b458c85a9abbc528375a540e8"
 }

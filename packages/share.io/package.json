@@ -1,6 +1,7 @@
 {
     "name": "share.io",
     "version": "2.0.0",
+    "license": "GPL-3.0",
     "description": "A simple file sharing made with socket.io",
     "type": "commonjs",
     "main": "./dist/index.js",
@@ -18,6 +19,10 @@
             }
         }
     },
+    "files": [
+        "dist",
+        "README.md"
+    ],
     "scripts": {
         "clean": "npx rimraf dist"
     },
@@ -28,5 +33,9 @@
         "socket.io": "^4.5.4",
         "socket.io-client": "^4.5.4",
         "tiny-typed-emitter": "^2.1.0"
-    }
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "gitHead": "2c067370d0aa2b2b458c85a9abbc528375a540e8"
 }
