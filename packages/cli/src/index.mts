@@ -35,9 +35,9 @@ command.command('host')
 
         receiverClient.on('ready', () => console.log(`Listening to ${chalk.cyan('http://127.0.0.1:' + (port ?? 5523))}`));
         receiverClient.on('connected', socket => console.log(`Client connected ${chalk.blue('SOCKET: ' + socket.id)}`));
+        receiverClient.on('disconnected', (reason, socket) => console.log(`Disconnected ${chalk.blue('SOCKET: ' + socket.id)} | ${chalk.gray('REASON: ' + reason)}`));
         receiverClient.on('newFile', file => console.log(`Receiving ${chalk.green('FILE: ' + file.file)}`));
         receiverClient.on('receivedFile', file => console.log(`Received ${chalk.green('FILE: ' + file.file)}`));
-        receiverClient.on('disconnected', (reason, socket) => console.log(`Disconnected ${chalk.blue('SOCKET: ' + socket.id)} | ${chalk.gray('REASON: ' + reason)}`));
         receiverClient.on('fileStream', data => data.type === StreamType.CHUNK
             ? console.log(`Chunk received ${chalk.green('FILE: ' + data.file)} | ${chalk.magenta('SIZE: ' + (data.data.byteLength / 1024) + 'KB')}`)
             : data.type === StreamType.ERROR
