@@ -3,7 +3,7 @@
   "private": true,
   "description": "A simple file sharing made with socket.io",
   "scripts": {
-    "build": "npx lerna run clean && npm i && npx tsc --build"
+    "build": "npx lerna run clean && npm i && npx lerna exec npx tsc"
   },
   "devDependencies": {
     "lerna": "^6.1.0",
