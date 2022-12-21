@@ -11,7 +11,7 @@ import path from 'path';
 
 export interface SenderClientOptions {
     socketOptions?: Partial<ManagerOptions & SocketOptions>;
-    host: `${'http://'|'https://'}${string}`;
+    host: `http${''|'s'}://${string}`;
     password?: string;
 }
 
