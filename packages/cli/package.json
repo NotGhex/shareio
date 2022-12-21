@@ -12,7 +12,8 @@
         "README.md"
     ],
     "scripts": {
-        "clean": "npx rimraf bin"
+        "clean": "npx rimraf bin",
+        "build": "npm run clean && npx tsc"
     },
     "dependencies": {
         "chalk": "^5.2.0",

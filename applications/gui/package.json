@@ -3,7 +3,8 @@
     "private": true,
     "description": "Graphical Interface for share.io",
     "scripts": {
-        "clean": "npx rimraf dist"
+        "clean": "npx rimraf dist",
+        "build": "npm run clean && npx tsc"
     },
     "dependencies": {
         "electron": "^22.0.0"
