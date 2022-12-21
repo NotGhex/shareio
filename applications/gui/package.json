@@ -1,5 +1,6 @@
 {
     "name": "@shareio/gui",
+    "version": "2.0.0",
     "private": true,
     "description": "Graphical Interface for share.io",
     "scripts": {
@@ -9,5 +10,8 @@
     "dependencies": {
         "electron": "^22.0.0"
     },
-    "version": "2.0.0"
+    "devDependencies": {
+        "@types/node": "^18.11.17",
+        "typescript": "^4.9.4"
+    }
 }
