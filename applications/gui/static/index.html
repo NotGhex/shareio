@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles/global.css">
+    <script>exports = {}</script>
+    <title>Share.io</title>
+</head>
+<body>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .container button {
+            padding: 10px;
+            margin: 10px 10px 5px 10px;
+            background: var(--primary);
+            width: calc(100% - 20px);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+    <div class="container">
+        <button id="host">Receive</button>
+        <button id="connect">Send</button>
+    </div>
+    <script src="../dist/scripts/global.js"></script>
+</body>
+</html>

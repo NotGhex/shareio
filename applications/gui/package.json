@@ -5,13 +5,15 @@
     "description": "Graphical Interface for share.io",
     "scripts": {
         "clean": "npx rimraf dist",
-        "build": "npm run clean && npx tsc"
+        "build": "npm run clean && npx tsc",
+        "start": "npx electron dist"
     },
     "dependencies": {
-        "electron": "^22.0.0"
+        "share.io": "*"
     },
     "devDependencies": {
         "@types/node": "^18.11.17",
+        "electron": "^22.0.0",
         "typescript": "^4.9.4"
     }
 }

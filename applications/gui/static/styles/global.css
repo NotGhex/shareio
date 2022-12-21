@@ -1,0 +1,21 @@
+:root {
+    --primary: rgb(21, 125, 216);
+    --secondary: rgb(57, 118, 197);
+}
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    user-select: none;
+    user-zoom: none;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
